@@ -29,6 +29,16 @@ within the wrapper element will be used for the click event, whereas the wrapper
 		<a href="/articles/1.html" class="knav_link">Introducing jquery.knav</a>
 	</div>
 
+## Installation
+Download jQuery and jquery.knav.js and include both in your HTML:
+
+	<head>
+		...
+		<script src="jquery.js" type="text/javascript"></script>
+		<script src="jquery.knav.js" type="text/javascript"></script>
+		...
+	</head>
+	
 Written by Bart Zonneveld <mail@bartzon.nl>
 
 Repository at http://github.com/bartzon/jquery.knav

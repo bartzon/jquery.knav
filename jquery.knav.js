@@ -106,7 +106,7 @@ $(document).bind('loadKnav', function() {
 			has_event_listener = obj.data('events') ? obj.data('events').click : false;
 
 			// if not, assign click handler to go to the object's href
-			if(obj.attr('href') && !has_event_listener) {
+			if(obj.attr('href') && obj.attr('href') != '#' && !has_event_listener) {
 				obj.bind('click.knav', function() { document.location = obj.attr('href'); })
 			}
 			
@@ -125,7 +125,7 @@ $(document).bind('loadKnav', function() {
 		
 		aboveTheFold: function(item) {
 			var top = $(window).scrollTop();
-			return top >= $(item).offset().top + $(item).height() + 100;
+			return top >= $(item).offset().top + $(item).height() - 100;
 		},
 	}
 
@@ -155,3 +155,4 @@ $(document).ready(function() {
 	$(document).trigger('loadKnav');
 	
 })
+

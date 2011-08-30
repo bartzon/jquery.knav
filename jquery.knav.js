@@ -19,33 +19,50 @@ $(document).bind('loadKnav', function() {
 		current: undefined,
 		index:   -1,
 
+		nextItem: function() {
+			var k = $.keynav;
+			var i = k.index + 1;
+		
+			var item = k.items[i];
+			
+			if($(item) && k.isVisible(item)) {
+				k.index = i;
+				return $(item);
+			} else {
+				return false;
+			}
+		},
+		
+		prevItem: function() {
+			var k = $.keynav;
+			var i = k.index - 1;
+			
+			var item = k.items[i];
+			if($(item) && k.isVisible(item)) {
+				k.index = i;
+				return $(item);
+			} else {
+				return false;
+			}
+		},
+		
 		up: function() {
 			var k = $.keynav;
 			
-			k.blur(k.current);
+			var item = k.prevItem();
 			
-			k.index -= 1;
-			if(k.index < 0) {
-				k.index = 0;
-			}
-			
-			if(k.items[k.index]) {
-				k.focus(k.items[k.index]);
+			if(item) {
+				k.focus(item);
 			}
 		},
 		
 		down: function() {
 			var k = $.keynav;
 			
-			k.blur(k.current);
-			
-			k.index += 1;
-			if(k.index > k.items.length) {
-				k.index = k.items.length;
-			}
-			
-			if(k.items[k.index]) {
-				k.focus(k.items[k.index])
+			var item = k.nextItem();
+
+			if(item) {
+				k.focus(item);
 			}
 		},
 		
@@ -53,8 +70,9 @@ $(document).bind('loadKnav', function() {
 			var k = $.keynav;
 			
 			if($(item)) {
+				k.blur(k.current);
 				$(item).addClass(k.focusClass);
-				k.current = item;
+				k.current = $(item);
 				k.moveWindowTo(item);
 			}
 		},
@@ -66,9 +84,15 @@ $(document).bind('loadKnav', function() {
 		},
 		
 		moveWindowTo: function(item) {
-			var currentHeight = $(item).outerHeight(), offset = $(item).offset();
- 			var top           = Math.round(offset.top - currentHeight - ($(window).height()/3) );
-			$('html,body').scrollTop(top);
+			var k = $.keynav;
+			var out_of_view = k.belowTheFold(item) || k.aboveTheFold(item);
+			
+			if(k.isVisible(item) && out_of_view) {
+				var currentHeight = $(item).outerHeight();
+				var offset        = $(item).offset();
+	 			var top           = Math.round(offset.top - currentHeight - ($(window).height()/3) );
+				$('html,body').scrollTop(top);
+			}
 		},
 		
 		fire: function() {
@@ -88,6 +112,20 @@ $(document).bind('loadKnav', function() {
 			
 			// send the click event
 			obj.click();
+		},
+		
+		isVisible: function(item) {
+			return $(item) && $(item).is(':visible');
+		},
+		
+		belowTheFold: function(item) {
+			var fold = $(window).height() + $(window).scrollTop();
+			return fold <= $(item).offset().top + 100;
+		},
+		
+		aboveTheFold: function(item) {
+			var top = $(window).scrollTop();
+			return top >= $(item).offset().top + $(item).height() + 100;
 		},
 	}
 
@@ -117,4 +155,3 @@ $(document).ready(function() {
 	$(document).trigger('loadKnav');
 	
 })
-
